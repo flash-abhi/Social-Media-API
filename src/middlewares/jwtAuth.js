@@ -8,10 +8,11 @@ if(!token){
     try{
         const payload = jwt.verify(token,"mMyWDpQd5eK5rTd0Qkz6OT4r6YxCaLyA");
     req.userId = payload.UserId;
+    // console.log(req.userId);
+    next();
     }catch(err){
         res.staus(400).send("unauthorized");
     }
-    next();
 }
 }
 

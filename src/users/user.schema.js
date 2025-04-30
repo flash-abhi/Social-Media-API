@@ -12,5 +12,9 @@ export const userSchema = mongoose.Schema({
         type : String,
         // required: true,
         unique: true,
+    },
+    gender:{
+        type: String,
+        enum:['Male','Female',"Other"]
     }
 });

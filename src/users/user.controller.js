@@ -8,11 +8,11 @@ export class userController{
     }
    async signUp(req,res,next){
         try{
-            let {name,email,password} = req.body;
+            let {name,email,password,gender} = req.body;
             const oldPass = password;
             // console.log(name,email,password);
             password =await bcrypt.hash(password,10);
-            const user = {name,email,password};
+            const user = {name,email,password,gender};
             const result = await this.userRepository.signUp(user);
             if(result){
                 res.status(201).send(result);
