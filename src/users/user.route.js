@@ -1,5 +1,6 @@
 import express from "express"
 import { userController } from "./user.controller.js";
+import jwtAuth from "../middlewares/jwtAuth.js";
 
 export const userRouter = express.Router();
 
@@ -12,3 +13,15 @@ userRouter.post("/signup",(req,res,next)=>{
 userRouter.post("/signin",(req,res,next)=>{
     UserController.signIn(req,res,next);
 })
+
+userRouter.get("/get-details",jwtAuth,(req,res,next)=>{
+    UserController.getProfile(req,res,next);
+});
+
+userRouter.get("/get-all-details",(req,res,next)=>{
+    UserController.getAllUsers(req,res,next);
+});
+
+userRouter.put("/update-details",jwtAuth,(req,res,next)=>{
+    UserController.updateProfile(req,res,next);
+});

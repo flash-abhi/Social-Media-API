@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import { userSchema } from "./user.schema.js"
+import { ObjectId } from "mongodb";
 
 const userModel = mongoose.model("User",userSchema);
 export class UserRepository{
@@ -18,5 +19,16 @@ export class UserRepository{
         }catch(err){
             console.log(err);
         }
+    }
+    async getUserById(id) {
+        return await userModel.findOne({_id: new ObjectId(id)}).select("-password");
+    }
+
+    async getAllUsers() {
+        return await userModel.find().select("-password");
+    }
+
+    async updateUser(id, updateData) {
+        return await userModel.findByIdAndUpdate(id, updateData, { new: true }).select("-password");
     }
 }

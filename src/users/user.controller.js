@@ -8,11 +8,11 @@ export class userController{
     }
    async signUp(req,res,next){
         try{
-            let {name,email,password,gender} = req.body;
+            let {name,email,password,gender,avatar} = req.body;
             const oldPass = password;
             // console.log(name,email,password);
             password =await bcrypt.hash(password,10);
-            const user = {name,email,password,gender};
+            const user = {name,email,password,gender,avatar};
             const result = await this.userRepository.signUp(user);
             if(result){
                 res.status(201).send(result);
@@ -50,7 +50,40 @@ export class userController{
         console.log(err);
     } 
     }
-    async resetPassword(req,res,next){
-        
+    async getProfile(req, res, next) {
+        try {
+            const userId = req.userId;
+            // console.log(userId);
+            const user = await this.userRepository.getUserById(userId);
+            // console.log(user);
+            if (!user) return res.status(404).send({ message: "User not found" });
+            res.status(200).send(user);
+        } catch (err) {
+            console.log(err);
+            res.status(500).send({ message: "Error retrieving profile" });
+        }
+    }
+
+    async getAllUsers(req, res, next) {
+        try {
+            const users = await this.userRepository.getAllUsers();
+            res.status(200).send(users);
+        } catch (err) {
+            console.log(err);
+            res.status(500).send({ message: "Error retrieving users" });
+        }
+    }
+
+    async updateProfile(req, res, next) {
+        try {
+            const userId = req.userId;
+            const { name, gender, avatar } = req.body;
+            const updateData = { name, gender, avatar };
+            const updatedUser = await this.userRepository.updateUser(userId, updateData);
+            res.status(200).send(updatedUser);
+        } catch (err) {
+            console.log(err);
+            res.status(500).send({ message: "Error updating profile" });
+        }
     }
 }
