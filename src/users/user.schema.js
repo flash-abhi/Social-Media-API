@@ -19,5 +19,9 @@ export const userSchema = mongoose.Schema({
     },
     avatar:{
         type: String
-    }
+    },
+    posts:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post"
+    }]
 });

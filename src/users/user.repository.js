@@ -21,14 +21,14 @@ export class UserRepository{
         }
     }
     async getUserById(id) {
-        return await userModel.findOne({_id: new ObjectId(id)}).select("-password");
+        return await userModel.findOne({_id: new ObjectId(id)}).select("-password").populate("Post");
     }
 
     async getAllUsers() {
-        return await userModel.find().select("-password");
+        return await userModel.find().select("-password").populate("Post");
     }
 
     async updateUser(id, updateData) {
-        return await userModel.findByIdAndUpdate(id, updateData, { new: true }).select("-password");
+        return await userModel.findByIdAndUpdate(id, updateData, { new: true }).select("-password").populate("Post");
     }
 }

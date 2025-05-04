@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import postSchema from "./post.schema.js";
 import { ObjectId } from "mongodb";
-const postModel = mongoose.model("Post",postSchema);
+export const postModel = mongoose.model("Post",postSchema);
 export class PostRepository{
     async create(post){
         try {

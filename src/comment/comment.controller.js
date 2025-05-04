@@ -9,6 +9,7 @@ export default class CommentController{
             const {postId} = req.body;
             const userId = req.userId;
             const result = await this.commentRepository.get(postId,userId);
+            console.log(result);
             if(result){
                 res.status(200).send({status: true, message: result});
             }else{
@@ -24,7 +25,7 @@ export default class CommentController{
             const userId = req.userId;
             // console.log(comment,postId,userId);
             const result = await this.commentRepository.add(comment,postId,userId);
-            // console.log(result);
+            // console.log("controller",result);
             if(result){
                 res.status(201).send({status: true, message: result});
             }else{
@@ -50,9 +51,9 @@ export default class CommentController{
     }
     async deleteComment(req,res,next){
         try{
-            const {postId} = req.body;
+            const {commentId,postId} = req.body;
             const userId = req.userId;
-            const result = await this.commentRepository.delete(postId,userId);
+            const result = await this.commentRepository.delete(commentId,postId,userId);
             if(result.deletedCount > 0){
                 res.status(200).send({status: true, message: "Comment Deleted Successfully !!!"});
             }else{

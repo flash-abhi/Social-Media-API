@@ -17,6 +17,7 @@ export class PostController{
             }else{
                 res.status(400).send("something went wrong with post creation");
             }
+            
         }catch(err){
             console.log(err)
         }

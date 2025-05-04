@@ -12,7 +12,18 @@ const postSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
-    }
+    },likes:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Like"
+        }
+    ],
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment"
+        }
+    ]
 });
 
 export default postSchema;
