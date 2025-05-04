@@ -20,6 +20,19 @@ export class UserRepository{
             console.log(err);
         }
     }
+    async logout(token, userId){
+        try{
+            const updatedUser = await userModel.findByIdAndUpdate(
+                userId,
+                { $pull: { tokens: token } },
+                { new: true }
+              );
+              if (!updatedUser) return null;
+              return { message: "Logged out successfully" };
+        }catch(err){
+            console.log(err);
+        }
+    }
     async getUserById(id) {
         return await userModel.findOne({_id: new ObjectId(id)}).select("-password").populate("Post");
     }

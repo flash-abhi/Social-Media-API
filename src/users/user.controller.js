@@ -42,6 +42,9 @@ export class userController{
                       expiresIn: "2h",
                     }
                   );
+                   user.token.push(token);
+                  const savedUser= await user.save();
+                 console.log(savedUser);
                   res.status(200).send(token);
             }else{
                 res.status(400).send({status: "error",description: "password doesn't match "});
@@ -104,6 +107,23 @@ export class userController{
                 msg: "Avatar uploaded to your profile cheers :)"
             });
            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+    async logoutUser(req,res,next){
+        try{
+            const token = req.headers.authorization.replace("Bearer", "");
+            const userId = req.userId;
+            const result = await this.userRepository.logout(token , userId);
+            if (!result) {  
+                throw new ApplicationError("Logout failed", 400);
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: result.message
+            });
         }catch(err){
             console.log(err);
         }

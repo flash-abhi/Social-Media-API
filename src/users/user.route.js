@@ -25,3 +25,9 @@ userRouter.get("/get-all-details",(req,res,next)=>{
 userRouter.put("/update-details",jwtAuth,(req,res,next)=>{
     UserController.updateProfile(req,res,next);
 });
+userRouter.post("/avatar-uploads",jwtAuth,(req,res,next)=>{
+    UserController.avatarUpload(req,res,next);
+});
+userRouter.post("/logout-device",jwtAuth,(req,res,next)=>{
+    UserController.logoutUser(req,res,next);
+})
