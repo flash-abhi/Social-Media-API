@@ -31,4 +31,9 @@ export class UserRepository{
     async updateUser(id, updateData) {
         return await userModel.findByIdAndUpdate(id, updateData, { new: true }).select("-password").populate("Post");
     }
+    async avatarUpload(avatar,userId){
+        const user = await userModel.findById(userId);
+        user.avatar = avatar;
+        return await user.save();
+    }
 }

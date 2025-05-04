@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import "dotenv/config"
 import { UserRepository } from "./user.repository.js";
 import jwt from "jsonwebtoken";
+import ApplicationError from "../errors/ApplicationError.js"
 export class userController{
     constructor(){
         this.userRepository = new UserRepository();
@@ -84,6 +85,27 @@ export class userController{
         } catch (err) {
             console.log(err);
             res.status(500).send({ message: "Error updating profile" });
+        }
+    }
+    async avatarUpload(req,res,next){
+        try{
+           const avatar = req.file.filename;
+           const userId = req.userId;
+           if(!avatar){
+            throw new ApplicationError("Avatar not Received  please add avatar.", 404);
+           }
+           else{
+            const result = await this.userRepository.avatarUpload(avatar,userId);
+            if(!result){
+                throw new ApplicationError("Avatar not Uploaded something went wrong");
+            }
+            return res.status(201).json({
+                success: true,
+                msg: "Avatar uploaded to your profile cheers :)"
+            });
+           }
+        }catch(err){
+            console.log(err);
         }
     }
 }
