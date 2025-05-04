@@ -11,7 +11,7 @@ export class PostController{
            const userId = req.userId;
             // console.log(userId);
             const post = {caption , imageUrl, userId};
-            const result = await this.postRepository.create(post);
+            const result = await this.postRepository.create(post,userId);
             if(result){
                 res.status(201).send(result);
             }else{

@@ -1,12 +1,19 @@
 import mongoose from "mongoose";
 import postSchema from "./post.schema.js";
 import { ObjectId } from "mongodb";
-export const postModel = mongoose.model("Post",postSchema);
+import { userSchema } from "../users/user.schema.js";
+
+const postModel = mongoose.model("Post",postSchema);
+const userModel = mongoose.model("User",userSchema);
 export class PostRepository{
-    async create(post){
+    async create(post,userId){
         try {
-            const postresult =  postModel(post);
+            const user = await userModel.findByID(userId);
+
+            const postresult = new postModel(post);
             await postresult.save();
+            user.posts.push(postresult._id)
+            await user.save();
             return postresult
 
         }catch(err){
