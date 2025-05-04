@@ -1,3 +1,4 @@
+import ApplicationError from "../errors/ApplicationError.js";
 import { PostRepository } from "./post.repository.js";
 
 export class PostController{
@@ -15,7 +16,7 @@ export class PostController{
             if(result){
                 res.status(201).send(result);
             }else{
-                res.status(400).send("something went wrong with post creation");
+                throw new ApplicationError("something went wrong with post creation",400);
             }
             
         }catch(err){
@@ -29,8 +30,8 @@ export class PostController{
            if(result.length>0){
             res.status(200).send({success: true, posts: result});
            }else{
-            res.status(400).send({success: false, posts: "cannot get the post"});
-           }
+            throw new ApplicationError("Post not Found ",404);
+        }
         }catch(err){
             console.log(err)
         }
@@ -42,7 +43,7 @@ export class PostController{
             if(result){
                 res.status(200).send({success: true, posts: result})
             }else{
-                res.status(400).send({success: false, posts: "No post found"});
+                throw new ApplicationError("post not found",400);
             }
         }catch(err){
             console.log(err)
@@ -57,7 +58,7 @@ export class PostController{
                 res.status(200).send({status: true, message: "post deleted successfully"});
             }
             else{
-                res.status(400).send({status: false, message: "Cannot delete the post"});
+                throw new ApplicationError("Cannot delete the post",400);
             }
         }catch(err){
             console.log(err);
@@ -72,8 +73,8 @@ export class PostController{
            if (result.modifiedCount > 0) {
             res.status(200).send({status: true, message: "post is updated"});
            }else{
-            res.status(400).send({status: false, message: " cannot update the post "});
-           }
+            throw new ApplicationError("Cannot update the post",400);
+        }
         }catch(err){
             console.log(err)
         }

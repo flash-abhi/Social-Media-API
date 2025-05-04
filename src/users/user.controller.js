@@ -9,16 +9,16 @@ export class userController{
     }
    async signUp(req,res,next){
         try{
-            let {name,email,password,gender,avatar} = req.body;
+            let {name,email,password,gender} = req.body;
             const oldPass = password;
             // console.log(name,email,password);
             password =await bcrypt.hash(password,10);
-            const user = {name,email,password,gender,avatar};
+            const user = {name,email,password,gender};
             const result = await this.userRepository.signUp(user);
             if(result){
                 res.status(201).send(result);
             }else{
-                res.status(400).send("something went wrong with user creation");
+                throw new ApplicationError("something went wrong with user creation",400);
             }
         }catch(err){
             console.log(err);
@@ -30,7 +30,7 @@ export class userController{
         const {email, password} = req.body;
         const user = await this.userRepository.signIn(email);
         if(!user){
-            res.status(400).send({status:"error",description: "User not found"});
+           throw new ApplicationError("User not Found",404);
         }
         else{
             const passMatch = bcrypt.compare(password,user.password);
@@ -47,7 +47,7 @@ export class userController{
                  console.log(savedUser);
                   res.status(200).send(token);
             }else{
-                res.status(400).send({status: "error",description: "password doesn't match "});
+                throw new ApplicationError("Password does not match",400);
             }
         }
     }catch(err){
@@ -81,8 +81,8 @@ export class userController{
     async updateProfile(req, res, next) {
         try {
             const userId = req.userId;
-            const { name, gender, avatar } = req.body;
-            const updateData = { name, gender, avatar };
+            const { name, gender } = req.body;
+            const updateData = { name, gender };
             const updatedUser = await this.userRepository.updateUser(userId, updateData);
             res.status(200).send(updatedUser);
         } catch (err) {

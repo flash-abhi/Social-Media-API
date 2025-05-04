@@ -3,6 +3,7 @@ import likeSchema from "./like.schema.js";
 import { ObjectId } from "mongodb";
 import postSchema from "../post/post.schema.js";
 import commentSchema from "../comment/comment.schema.js";
+import ApplicationError from "../errors/ApplicationError.js";
 const likeModel = mongoose.model("Like",likeSchema);
 const postModel = mongoose.model("Post",postSchema);
 const commentModel = mongoose.model("Comment",commentSchema);
@@ -17,7 +18,7 @@ export default class LikeRepository{
         }
 
         if(!likeable){
-            throw new Error(`No ${types} found by the id `,404)
+            throw new ApplicationError(`No ${types} found by the id `,404)
         }
 
         const existingLike = await likeModel.findOne({
@@ -58,7 +59,21 @@ export default class LikeRepository{
    }
     async get(id,userId,types){
         try{
-            return await likeModel.find({users: new ObjectId(userId),likeable: new ObjectId(id),Types: types}).populate({path:'likeable',model: types});
+            let likeable;
+            if(types == "Post"){
+               likeable = await postModel.findById(id);
+            }
+            else if(types == "Comment"){
+                likeable = await commentModel.findById(id);
+            }
+
+            if(!likeable){
+                throw new ApplicationError(`No ${types.toLowerCase()} found with this ID.`, 404);
+            }
+            const likes = await likeModel.find({likeable: new ObjectId(id),
+                Types: types}).populate({ path: 'users',
+                    select: 'name email _id'}).populate("likeable");
+                    return likes;
         }catch(err){
             console.log(err);
         }
