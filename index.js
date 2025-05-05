@@ -7,6 +7,7 @@ import commentRouter from "./src/comment/comment.routes.js";
 import likeRouter from "./src/likes/like.routes.js";
 import ApplicationError from "./src/errors/ApplicationError.js";
 import friendshipRouter from "./src/Friendship/friendship.routes.js";
+import { connectUsingMongoose } from "./src/config/mongooseConfig.js";
 export const app = express();
 
 
@@ -30,4 +31,8 @@ app.use((err,req,res,next)=>{
 
 app.use((req,res)=>{
     res.status(404).send("API not found please give valid API.");
+});
+app.listen(5000,()=>{
+    console.log("server is listening on port 5000");
+    connectUsingMongoose();
 });
