@@ -6,6 +6,7 @@ import jwtAuth from "./src/middlewares/jwtAuth.js"
 import commentRouter from "./src/comment/comment.routes.js";
 import likeRouter from "./src/likes/like.routes.js";
 import ApplicationError from "./src/errors/ApplicationError.js";
+import friendshipRouter from "./src/Friendship/friendship.routes.js";
 export const app = express();
 
 
@@ -14,8 +15,9 @@ app.use("/api/users",userRouter);
 app.use("/api/post",jwtAuth,postRouter);
 app.use("/api/comment",jwtAuth,commentRouter);
 app.use("/api/likes",jwtAuth,likeRouter);
+app.use("/api/friend",jwtAuth,friendshipRouter);
 app.get('/',(req,res)=>{
-    res.send("welcome to api");
+    res.status(200).send("welcome to api");
 });
 
 app.use((err,req,res,next)=>{
@@ -24,7 +26,7 @@ app.use((err,req,res,next)=>{
     }
     console.log(err);
     res.status(500).send("Something went wrong please try after some time.")
-})
+});
 
 app.use((req,res)=>{
     res.status(404).send("API not found please give valid API.");
